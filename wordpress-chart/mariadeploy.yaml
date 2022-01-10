@@ -1,0 +1,48 @@
+apiVersion: v1                    # API version
+kind: Service                     # Type of kubernetes resource 
+metadata:
+  name: polling-app-mysql         # Name of the resource
+  labels:                         # Labels that will be applied to the resource
+    app: polling-app
+spec:
+  ports:
+    - port: 3306
+  selector:                       # Selects any Pod with labels `app=polling-app,tier=mysql`
+    app: polling-app
+    tier: mysql
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment                    # Type of the kubernetes resource
+metadata:
+  name: polling-app-mysql           # Name of the deployment
+  labels:                           # Labels applied to this deployment 
+    app: polling-app
+spec:
+  selector:
+    matchLabels:                    # This deployment applies to the Pods matching the specified labels
+      app: polling-app
+      tier: mysql
+  strategy:
+    type: Recreate
+  template:                         # Template for the Pods in this deployment
+    metadata:
+      labels:                       # Labels to be applied to the Pods in this deployment
+        app: polling-app
+        tier: mysql
+    spec:                           # The spec for the containers that will be run inside the Pods in this deployment
+      containers:
+      - image: mariadb         # The container image
+        name: mysql
+        env:                        # Environment variables passed to the container 
+        - name: MYSQL_ROOT_PASSWORD 
+          value: password
+        - name: MYSQL_DATABASE
+          value: database
+        - name: MYSQL_USER
+          value: username
+        - name: MYSQL_PASSWORD
+          value: password
+        ports:
+        - containerPort: 3306        # The port that the container exposes       
+          name: mysql
