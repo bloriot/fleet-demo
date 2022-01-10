@@ -1,6 +1,7 @@
 helm:
   chart: "" 
   values: 
+    replicaCount: 1
     cow_color: yellow
 diff:
   comparePatches:
