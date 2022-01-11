@@ -1,0 +1,15 @@
+helm:
+  chart: "" 
+  values: 
+    replicaCount: 1
+    app:
+      localization:
+        pets: "cows"
+        color: "black"
+
+diff:
+  comparePatches:
+  - apiVersion: networking.k8s.io/v1beta1
+    kind: Ingress
+    operations:
+    - {"op":"remove", "path":"/spec"}
